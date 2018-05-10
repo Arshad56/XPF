@@ -1,0 +1,62 @@
+<aura:component >    
+    <!-- Aura Attribute for store single Contact[standard Object] Instance
+         And Store Index of Particular Instance --> 
+         
+    <aura:attribute name="RDInstance" type="Service_Rotation_Detail__c"/>
+    <aura:attribute name="rowIndex" type="String"/> 
+    <aura:attribute name="hideDelete" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!-- Register 2 Lightning Event for handle add or Delete rows on Parent Component  --> 
+    <aura:registerEvent name="DeleteRDRowEvt" type="c:DeleteRDRowEvt"/> 
+    
+    
+    <!-- Table Row -->   
+    <tr class="slds-text-title_caps">
+        <td  style="width: 30px;"> 
+            {!v.rowIndex + 1}
+        </td>
+        <td  style="width: 100px;">
+            <c:strike_lookup value="{!v.RDInstance.Port__c}"
+				    object="Port__c"
+				    searchField="Name"  
+				    placeholder=""
+				    iconName="standard:account"
+				    subtitleField="Port_Name__c"
+				    order="Name"
+				    limit="5"
+				    loadingMessage="Loading..."
+				    errorMessage="Invalid input"/>
+        </td>
+        <td  style="width: 100px;">
+            <c:strike_lookup value="{!v.RDInstance.Terminal__c}"
+					filter="{!'Port_Code__c =\''+v.RDInstance.Port__c+'\''}" 
+				    object="Terminal__c"
+				    searchField="Name"  
+				    placeholder=""
+				    iconName="standard:account"
+				    subtitleField="Port_Code_Text__c"
+				    order="Name"
+				    limit="25"
+				    loadingMessage="Loading..."
+				    errorMessage="Invalid input"/> 
+        </td>
+        <td  style="width: 200px;">
+            <lightning:textarea name="agenda" value="{!v.RDInstance.Remarks__c}"  class="topText slds-m-top_xx-small" maxlength="300"/>
+        </td>
+        <td  style="width: 30px;">
+            <!-- conditionally Display Add or Delete Icons
+                 if rowIndex is 0 then show Add New Row Icon else show delete Icon
+             --> 
+            <aura:if isTrue="{!v.hideDelete}">
+              <aura:set attribute="else">
+                  <a onclick="{!c.removeRow}">
+                   <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                   <span class="slds-assistive-text">Delete Icon</span>
+                  </a>
+              </aura:set> 
+            </aura:if>
+        </td> 
+    </tr>
+</aura:component>

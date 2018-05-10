@@ -1,0 +1,66 @@
+<aura:component >
+  <!--Init handler which is call doInit js function on component Load-->  
+
+  
+ <!--Event handler for Add and Delete Row Event which is fire from Child Component-->    
+    <aura:handler name="DeleteRDRowEvt" event="c:DeleteRDRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddRPRowEvt" event="c:AddRPRowEvt" action="{!c.addNewRow}"/>
+ 	
+ 	
+ 	<aura:registerEvent name="AddRDRowEvt" type="c:AddRDRowEvt"/> 
+ <!--Aura Attribute for store Contact Object List as Array--> 
+ 	<aura:attribute name="parentRPIndex" type="String"/> 
+ 	<aura:attribute name="rdList" type="Service_Rotation_Detail__c[]" default="[]"/>  
+    <aura:attribute name="recordId" type="String" />
+    
+ <!--Header Part-->       
+ <!--Table Part-->           
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table--fixed-layout blueHeader" style="width:65%;"> 
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col" class="slds-text-align--center"  style="width: 30px;">
+                        No
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 100px;">
+                        PORT
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 100px;">
+                        TERMINAL 
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 200px;">
+                        REMARKS
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 30px;">
+                        &nbsp;
+                    </th>
+            </tr>
+        </thead>  
+    </table>
+	    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table--fixed-layout" style="width:65%;"> 
+	           <tbody>   
+               <tr class="slds-text-title_caps" style="display: none;">
+                   <td scope="col" class="slds-text-align--center"  style="width: 30px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 100px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 100px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 200px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 30px;height: 1px;">&nbsp;</td>
+	            </tr>
+	           <!--Iterate the child Component for display Table rows 
+	               with pass the List Item Index for track the Every child Component 
+	               and pass each List Contact Instance -->         
+	            <aura:iteration items="{!v.rdList}" var="item" indexVar="index">
+	                <c:RDRowItem RDInstance="{!item}" rowIndex="{!index}" />
+	            </aura:iteration> 
+	            <tr  style="background: rgb(243, 242, 242);" >
+                	<td colspan="3" style="z-index: 0;"></td>
+                	<td class="slds-text-align--center" colspan="2" style="z-index: 0;">
+                		<button class="slds-button slds-button_neutral" onclick="{!c.AddNewRDRowButton}" style="width:100%;">
+<!-- 					              <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/> -->
+<!-- 					              <span class="slds-assistive-text">Add Icon</span> -->
+										+ Add 1 more row
+				        </button>
+                	</td>
+                </tr>
+	        </tbody>
+	    </table>
+</aura:component>

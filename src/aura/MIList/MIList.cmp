@@ -1,0 +1,13 @@
+<aura:component controller="VR_Interface_Controller" Implements="force:hasRecordId">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="miItemList" type="Market_Intelligence__c[]" />
+	<aura:attribute name="recordId" type="String" /> 
+ 
+	<div class="tileLs" id="tileLs" style="display:block;">
+         <ul class="slds-card__body_inner slds-grid slds-wrap slds-grid_pull-padded slds-m-horizontal_xxx-small slds-p-horizontal_xxx-small">
+             <aura:iteration items="{!v.miItemList}" var="item" indexVar="index">
+            	<c:MI_List_Card miItem="{!item}"/>
+             </aura:iteration> 
+       </ul>   
+   </div>
+</aura:component>

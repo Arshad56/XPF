@@ -1,0 +1,51 @@
+<aura:component controller="ShareNotify_Controller" access="global"  Implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="isListEmpty" type="boolean"/>
+	<aura:attribute name="isListView" type="boolean"/>
+	<aura:attribute name="isOwner" type="boolean"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:attribute name="shareList" type="ShareNotify_Controller.ShareNotifyWrapper[]"/>
+	<aura:attribute name="removedIds" type="String[]"/>
+	<aura:handler name="DeleteUpdateRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}"/>
+	 
+	<lightning:tabset variant="scoped">
+		<lightning:tab onactive="{! c.handleActive }" label="Share &amp; Notify" id="list" >
+			<div class="slds-scrollable"  style="{!if(v.isOwner,'height:250px;','height:470px;')}">
+				<aura:if isTrue="{! !v.isListEmpty}">
+						<table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer slds-table--fixed-layout">
+							<thead>
+								<tr class="slds-text-heading--label">
+									<th scope="col" style="width: 40%"><div class="slds-truncate" title="Name">Name</div></th>
+									<th scope="col" style="width: 5%"><aura:if isTrue="{! v.isOwner}">NF</aura:if>&nbsp;</th>
+									<th style="width: 5%">&nbsp;</th>
+									<th scope="col" style="width: 30%"><div class="slds-truncate" title="Access Level">Access Level</div></th>
+									<th style="width: 20%"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<aura:iteration items="{!v.shareList}" var="shr" indexVar="index">
+									<tr>
+							 			<c:ShareNotifUpdate shareItem="{!shr}" isOwner="{!v.isOwner}"  rowIndex="{!index}" /> 
+							 		</tr>
+								</aura:iteration>
+							</tbody> 
+						</table>
+            		<aura:set attribute="else">
+            			<b>List is Empty!!</b>
+	            	</aura:set>
+			     </aura:if>
+			</div>
+			<aura:if isTrue="{! v.isOwner}">
+				<div  style="height:220px;">
+					<c:ShareNotifySection_Component recordId="{!v.recordId}"  aura:id="shareBlock"/>
+				</div>
+			</aura:if>
+		</lightning:tab>
+	</lightning:tabset>
+	<footer class="slds-card__footer slds-text-align_right">
+			<button class="slds-button slds-button_neutral" onclick="{!c.done}">Cancel</button>
+			<aura:if isTrue="{! v.isOwner}">
+				<button class="slds-button slds-button_brand"  onclick="{!c.saveShr}">Save</button>
+			</aura:if>
+    </footer>
+</aura:component>

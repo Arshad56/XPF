@@ -1,0 +1,12 @@
+.THIS .noPadding th{
+	padding: 5px !important;
+}
+.THIS .wk_warning {
+    background : #FFB75D !important;
+}
+.THIS .wk_success {
+    background : #04844B !important;
+}
+.THIS .add_icon_cust svg {
+	fill : rgb(28, 82, 150);
+}

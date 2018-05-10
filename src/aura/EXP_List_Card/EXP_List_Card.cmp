@@ -1,0 +1,29 @@
+<aura:component >
+	<aura:attribute name="expItem" type="Expense_Item__c" /> 
+	<li class="slds-p-horizontal_xxx-small slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-2">
+        <article class="slds-tile slds-media slds-card__tile slds-hint-parent lsBrd">
+            <div class="slds-media__body slds-border"  style="border: solid;border-width: 1px;border-color: #d4d4d4;">
+                <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate slds-m-left_xx-small">
+                    <h3 class="slds-tile__title" title="{!v.expItem.name}"><a href="javascript:void(0);" onclick="{!c.redirect}">{!v.expItem.Name}</a></h3>
+                    <div class="slds-shrink-none">
+<!--                         <button class="slds-button slds-button_icon slds-button_icon-border-filled" aria-haspopup="true" title="Edit" style="margin-right: 15px;">                                                           -->
+<!--                             Edit -->
+<!--                         </button> -->
+                      </div>
+                </div>
+                <div class="slds-tile__detail slds-m-left_xx-small">
+                    <dl class="slds-list_horizontal slds-wrap">
+                        <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Account">Date:</dt>
+                        <dd class="slds-item_detail slds-truncate" title="{!v.expItem.Account_Name__r.Name}">
+							<lightning:formattedDateTime value="{!v.expItem.Date__c}" />
+						</dd>
+                        <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Amount">Type:</dt>
+                        <dd class="slds-item_detail slds-truncate" title="{!v.expItem.Amount__c}">{!v.expItem.Type__c}</dd>
+                        <dt class="slds-item_label slds-text-color_weak slds-truncate" title="amount">Amount:</dt>
+                        <dd class="slds-item_detail slds-truncate" title="{!v.expItem.Currency_Code__c +' '+v.expItem.Amount__c}">{!v.expItem.Currency_Code__c  +' '+ v.expItem.Amount__c}</dd>
+                    </dl>
+                </div>
+            </div>
+        </article>
+    </li>
+</aura:component>

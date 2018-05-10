@@ -1,0 +1,21 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="obj" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Visit_Report_Item__c"/>
+    <force:recordData aura:id="forceRecordCmp"
+                      recordId="{!v.recordId}"   
+                      layoutType="FULL"
+                      targetRecord="{!v.obj}"
+                      targetFields="{!v.simpleRecord}"
+                      recordUpdated="{!c.handleRecordUpdated}"/>
+    <lightning:card >
+        <center>
+            <br/>
+            <h2 id="rlql-headerLabel" class="slds-text-heading--small">Are you sure you want to Clone and Share?</h2>
+            <br/>
+            
+            <lightning:button variant="brand" label="  Yes  " onclick="{! c.handleClick }" />&nbsp;&nbsp;
+            <lightning:button variant="neutral" label="  No  " onclick="{! c.cancel }" />
+        </center>  
+    </lightning:card>
+</aura:component>

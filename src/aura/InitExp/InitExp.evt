@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event to Init Exp" >
+    <aura:attribute name="from" type="String" description="from cmp" />
+    <aura:attribute name="Id" type="String" description="EXP Id cmp" />
+</aura:event>

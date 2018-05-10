@@ -1,0 +1,13 @@
+<aura:component Implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,force:lightningQuickAction">
+	<div aura:id="thecontainer" class="thecontainer" id="thecontainer">
+        <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open slds-modal--large" >
+          <div class="slds-modal__container">
+            <div class="slds-modal__content slds-p-top--x-large slds-p-around--medium" aura:id="modalbody" id="modalbody">
+
+                <c:BulkPortPair />
+
+            </div><!-- modal -->
+          </div>
+        </div>
+	</div>
+</aura:component>

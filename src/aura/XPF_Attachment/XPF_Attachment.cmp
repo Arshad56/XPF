@@ -1,0 +1,38 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForRecordHome,force:appHostable" Controller="XPFAttachmentAura">
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="canUpload" type="Boolean"/>
+    <aura:attribute name="ContentVersions" type="Contentversion[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.openSingleFile}"/>
+    
+    <div class= "slds-box slds-theme_default">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+                <p><lightning:icon iconName="standard:file" size="small"/>&nbsp; Files ({!v.ContentVersions.length})</p>
+            </div>
+            <div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+                <aura:if isTrue="{! v.canUpload }">
+                    <div class="slds-form-element slds-align--absolute-center">
+                        <lightning:fileUpload label="Add attachment" multiple="true"   recordId="{!v.recordId}"  onuploadfinished="{!c.handleUploadFinished}"/>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+        <aura:iteration items="{!v.ContentVersions}" indexVar="i" var="obj">
+            <div class="slds-grid">
+                <a href="javascript:void(0);"
+                   data-recId="{!obj.ContentDocumentId}"
+                   onclick="{!c.previewFile}">
+                    <lightning:icon iconName="{!obj.FileTypeIconName}" class="slds-p-right_x-small"/>
+                </a>
+                
+                <!-- <lightning:buttonIcon iconName="utility:preview" onclick="{!c.previewFile}" name="{!obj.ContentDocumentId}"/>-->&nbsp;&nbsp;
+                <div class="slds-size_1-of-2">
+                    <a href="javascript:void(0);"
+                   data-recId="{!obj.ContentDocumentId}"
+                   onclick="{!c.previewFile}">{!obj.Title}</a><br/>
+                    <lightning:formattedDateTime value="{!obj.ContentModifiedDate}" year="2-digit" month="short" day="2-digit" weekday="short"/> • <lightning:formattedNumber value="{!obj.ContentSize/1024}" maximumFractionDigits="0"/>KB • <ui:outputText value="{!obj.FileType}"/><br/><br/>
+                </div>
+            </div>
+        </aura:iteration>
+    </div>
+</aura:component>

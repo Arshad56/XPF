@@ -1,0 +1,37 @@
+<aura:component Controller="CountryCityVRIController" Implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="readAccess" type="Boolean" default="false"/>
+     
+    <aura:attribute name="country" type="String" />
+	<aura:attribute name="city" type="String" />
+	
+	
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div class="slds-page-header slds-align_absolute-center" >
+        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Add Contacts/Attendees">Add Country/City</h1>
+        <p class="slds-text-body_small slds-line-height_reset"></p>
+        <input aura:id="inputField" type="text" value="" style="z-index: -1;width: 1px;"/>
+    </div><br/>
+    
+    <aura:if isTrue="{!v.readAccess}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <h2>Looks like there's something wrong.<br/>You do not have the access necessary to perform the operation you requested.<br/>
+            Please contact the owner of the record or administrator if access is necessary.
+            </h2>
+        </div>
+        <aura:set attribute="else">
+        	
+            <div class="slds-grid slds-gutters" style="overflow-y: scroll !important;overflow-x: hidden;height:250px;">
+                <c:CountryCityVRI_Dependent aura:id="VR_DependentPicklist" isAction="true" recordId="{!v.recordId}" objInfo="Visit_Report_Item__c"  controlling="{!v.country}" dependent="{!v.city}"/>
+            </div>
+            
+            <Footer class="slds-modal__footer slds-align_absolute-center">  
+                <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelHandle }" />     
+                <lightning:button variant="brand" label="save" onclick="{!c.saveRecord }" /> 
+            </Footer>
+        </aura:set>
+    </aura:if>
+    
+</aura:component>

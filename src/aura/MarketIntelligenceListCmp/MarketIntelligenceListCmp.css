@@ -1,0 +1,15 @@
+.THIS .slds-text-heading--small{
+    font-weight:bolder;
+}
+
+.THIS .slds-card__body{
+    padding:10px;
+}
+
+.THIS .slds-p-horizontal_small{
+    padding-bottom:10px;
+}
+
+.THIS .scrollerSize {
+    height: 250px;
+}

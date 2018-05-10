@@ -1,0 +1,146 @@
+<aura:component >    
+    <!-- Aura Attribute for store single Contact[standard Object] Instance
+         And Store Index of Particular Instance --> 
+    
+    <aura:attribute access="public" name="portPair" type="Port_Pair__c"/>
+    <aura:attribute name="rowIndex" type="String"/>
+    <aura:attribute name="totalValue" type="Decimal"/>
+    
+    <aura:attribute name="currencyString" type="String" default="{v.portPair.Currency_Code__c}"/>
+    <aura:attribute name="xpfString" type="String" default="{v.portPair.Arragement__c}"/>
+    
+    <aura:attribute name="rvChecked" type="Boolean" default="false"/>
+    <aura:attribute name="hideDelete" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- Register 2 Lightning Event for handle add or Delete rows on Parent Component  --> 
+    <aura:registerEvent name="DeleteRowEvt" type="c:DeleteRowEvt"/> 
+    <aura:registerEvent name="AddRowEvt" type="c:AddNewRowEvt"/> 
+    <aura:registerEvent name="sumRowPP" type="c:AddNewRowEvt"/> 
+    <aura:registerEvent name="RvCheckedEvt" type="c:RvCheckedEvt"/> 
+    
+<!--     <aura:handler name="change" value="{!v.portPair.RV__c}" action="{!c.toggleLookups}" /> -->
+     
+    <!-- Table Row -->   
+    <tr class="slds-text-title_caps" style="vertical-align: top;">
+    	
+        <td  scope="row" data-label="arrangement" style="width: 50px;padding-top: 5px;" > 
+            <div style="margin-left: -12px;">
+            		<ui:inputSelect value="{!v.xpfString}" change="{!c.assignXPF}" >
+				             <ui:inputSelectOption text="XPF to Customer" label="Give"/>
+				             <ui:inputSelectOption text="Customer to XPF" label="Take"/>
+				    </ui:inputSelect>
+			</div> 
+        </td>
+        <td scope="row" data-label="Service" style="width: 142px;padding-top: 5px;" >
+    			 <c:strike_multiLookup value="{!v.portPair.Service__c}"
+				    object="Service__c"
+				    searchField="Name"  
+				    placeholder=""
+				    subtitleField="Service_Name__c"
+				    order="Name"
+				    limit="5"
+				    loadingMessage="Loading..."
+				    errorMessage="Invalid input"
+				    />  
+        </td>
+        <td scope="row" data-label="Service" style="width: 30px;padding-top: 13px;" >
+    			<ui:inputCheckbox value="{!v.portPair.RV__c}"/>
+<!--     			change="{!c.toggleLookups}" Removed in UAT-->
+        </td>
+        
+        <td scope="row" data-label="Port of Loading" style="width: 130px;padding-top: 5px;" >
+	        	<c:strike_lookup value="{!v.portPair.Port_of_Loading__c}"
+				    object="Port__c"
+				    searchField="Name"  
+				    placeholder=""
+				    iconName="standard:account"
+				    subtitleField="Port_Name__c"
+				    order="Name"
+				    limit="5"
+				    loadingMessage="Loading..."
+				    errorMessage="Invalid input"/>
+        </td>
+        <td scope="row" data-label="Terminal of Loading" style="width: 130px;padding-top: 5px;" >
+			<c:strike_lookup value="{!v.portPair.Terminal_of_Loading__c}"
+					filter="{!'Port_Code__c =\''+v.portPair.Port_of_Loading__c+'\''}" 
+				    object="Terminal__c"
+				    searchField="Name"  
+				    placeholder=""
+				    iconName="standard:account"
+				    subtitleField="Port_Code_Text__c"
+				    order="Name" 
+				    limit="25"
+				    loadingMessage="Loading..."
+				    errorMessage="Invalid input"/> 
+		</td>
+        <td scope="row" data-label="Port of Discharge" style="width: 130px;padding-top: 5px;" >
+        		<c:strike_lookup value="{!v.portPair.Port_of_Discharge__c}"
+				    object="Port__c"
+				    searchField="Name"  
+				    placeholder=""
+				    iconName="standard:account"
+				    subtitleField="Port_Name__c"
+				    order="Name"
+				    limit="5"
+				    loadingMessage="Loading..."
+				    errorMessage="Invalid input"/>
+        </td>
+        <td scope="row" data-label="Terminal of Discharge" style="width: 130px;padding-top: 5px;" >
+        		<c:strike_lookup value="{!v.portPair.Terminal_of_Discharge__c}"
+					filter="{!'Port_Code__c =\''+v.portPair.Port_of_Discharge__c+'\''}" 
+				    object="Terminal__c"
+				    searchField="Name"  
+				    placeholder=""
+				    iconName="standard:account"
+				    subtitleField="Port_Code_Text__c"
+				    order="Name"
+				    limit="25"
+				    loadingMessage="Loading..."
+				    errorMessage="Invalid input"/>   
+		 </td>
+        <td scope="row" data-label="Volume (Teus)" style="width: 80px;padding-top: 5px;" >
+            	<ui:inputNumber class="slds-input" value="{!v.portPair.Volume_Teus__c}" change="{!c.volRateChange}"/>
+        </td>
+        <td scope="row" data-label="Weight" style="width: 70px;padding-top: 5px;" >
+            	<ui:inputNumber class="slds-input" value="{!v.portPair.Weight__c}"  />
+        </td>
+        <td scope="row" data-label="CC" style="width: 70px;padding-top: 5px;" >
+            	<div class="lableNone ccWidth">
+					<ui:inputSelect value="{!v.currencyString}"  change="{!c.assignXPF}" >
+				             <ui:inputSelectOption text="USD" label="USD"/>
+				             <ui:inputSelectOption text="EURO" label="EURO"/>
+				    </ui:inputSelect>
+		        </div>
+        </td>
+        
+        <td scope="row" data-label="Rate" style="width: 80px;padding-top: 5px;" >
+            	<ui:inputNumber class="slds-input" value="{!v.portPair.Req_Rate__c}"  change="{!c.volRateChange}" />
+        </td>
+        <td scope="row" data-label="Total Value" style="width: 80px;padding-top: 5px;text-align: right;" >
+        	<aura:if isTrue="{! (v.portPair.Volume_Teus__c * v.portPair.Req_Rate__c) > 0}">
+        		<div style="margin-top: 10px;">
+        		<aura:if isTrue="{!v.portPair.Currency_Code__c =='USD'}">$</aura:if>
+        		<aura:if isTrue="{!v.portPair.Currency_Code__c == 'EURO'}">€</aura:if>
+        		<ui:outputNumber value="{! (v.portPair.Volume_Teus__c * v.portPair.Req_Rate__c)}" format="###,###,##0"/></div>
+        	</aura:if>
+        </td>
+        <td scope="row" data-label="Remarks" style="width: 150px;padding-top: 5px;" >
+            	<lightning:textarea name="agenda" value="{!v.portPair.Remarks__c}"  class="topText" maxlength="300"/>
+        </td>
+        <td scope="row" style="width: 20px;padding-top: 5px;" class="slds-text-align--center" >
+            <!-- conditionally Display Add or Delete Icons
+                 if rowIndex is 0 then show Add New Row Icon else show delete Icon
+             --> 
+            <aura:if isTrue="{!v.hideDelete}">
+                   
+              <aura:set attribute="else">
+                  <a onclick="{!c.removeRow}">
+                   <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon" />
+                   <span class="slds-assistive-text">Delete Icon</span>
+                  </a>
+              </aura:set> 
+            </aura:if>
+        </td> 
+    </tr>
+</aura:component>

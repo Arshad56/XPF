@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Event to on change of dependent picklist change" >
+    <aura:attribute name="value" type="String" description="selected PickList" />
+</aura:event>

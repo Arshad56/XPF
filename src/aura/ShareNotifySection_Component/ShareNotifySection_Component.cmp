@@ -1,0 +1,66 @@
+<aura:component controller="ShareNotify_Controller" access="global" Implements="force:hasRecordId">
+	 
+	 <aura:attribute name="vrShare" type="Visit_Report_Item__Share" default="{ 'sobjectType': 'Visit_Report_Item__Share' }"/>
+	 <aura:attribute name="shareList" type="ShareNotify_Controller.ShareNotifyWrapper[]" />
+	 <aura:attribute name="recordId" type="String" />
+	 
+	 <aura:attribute name="objectName" type="String" />
+	 <aura:attribute name="subTitle" type="String" default="Name"/>
+	 <aura:attribute name="picklistName" type="String" default="User"/>
+	 
+	  <aura:handler name="change" value="{!v.vrShare.UserOrGroupId}" action="{!c.addItemInTable}"/>
+	  <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}"/>
+	  <aura:method name="getSaveShare" action="{!c.saveShare}" access="PUBLIC"/>
+	  
+	  <div class="slds-grid slds-wrap" style="border: 1px;border-color: black;border-style: solid;">
+		     <div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+		         <div class="slds-form-element">
+					  <lightning:select name="User Or Group" value="{!v.picklistName}" label="User Or Group" onchange="{!c.changeLookup}">
+				        <option value="User">User</option>
+				        <option value="Group">Group</option>
+				    </lightning:select>
+				    </div>
+		     </div>
+		     <div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+		         <div class="slds-form-element"> 
+		         <aura:if isTrue="{!v.objectName == 'Group'}">
+		     		<c:strike_Sharing_lookup value="{!v.vrShare.UserOrGroupId}"
+			 				label="Group"
+						    object="Group"
+						    searchField="Name"  
+						    placeholder=""
+						    subtitleField="Name"
+						    order="Name"
+						    limit="15" 
+						    loadingMessage="Loading..."
+						    errorMessage="Invalid input"
+						    />
+		     	<aura:set attribute="else">
+		     		<c:strike_Sharing_lookup value="{!v.vrShare.UserOrGroupId}"
+			 				label="User"
+						    object="User"
+						    searchField="Name"  
+						    placeholder=""
+						    subtitleField="Name"
+						    order="Name"
+						    limit="15"
+						    loadingMessage="Loading..."
+						    errorMessage="Invalid input"
+						    />
+		     	</aura:set>
+		   		 </aura:if>
+		 		</div>
+		</div>
+	</div>
+	<div class="slds-scrollable"  style="height:180px;">
+		<table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer slds-table--fixed-layout" style="z-index: 0">
+			 <tbody>
+				 <aura:iteration items="{!v.shareList}" var="item" indexVar="index">
+			 		<tr>
+			 			<c:ShareNotify_Card shareItem="{!item}"  rowIndex="{!index}" /> 
+			 		</tr>
+				 </aura:iteration>
+			 </tbody>
+		 </table>
+	</div>
+</aura:component>

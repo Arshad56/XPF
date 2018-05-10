@@ -1,0 +1,148 @@
+<aura:component access="global" controller="BulkPortPair_Controller"
+                Implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="wrapperList"
+                    type="BulkPortPair_Controller.RPWrapper[]" />
+    <aura:attribute name="portPairList" type="Port_Pair__c[]" />
+    <aura:attribute name="portPairArrangement" type="String" />
+    <aura:attribute name="rotationPairArrangement" type="String" />
+    
+    <aura:attribute name="grandTotalGive" type="Decimal"  default="0"/>
+    <aura:attribute name="grandTotalTake" type="Decimal"  default="0"/>
+    
+    <aura:attribute name="readAcces" type="Boolean"/>
+    
+    <aura:handler name="sumRowPP" event="c:AddNewRowEvt" action="{!c.sumrizeRow}"/>
+ 	<aura:handler name="sumRowSR" event="c:AddNewRowEvt" action="{!c.sumrizeRow}"/>
+ 	
+    <style>
+        .cBulkPortPair {
+        background: white;
+        }
+        
+        .cRotationPortPair {
+        background: white;
+        }
+        
+        .slds-modal__container {
+        max-width: 90rem !important;
+        width: 99% !important;
+        height: 100% !important;
+        }
+        
+        .slds-input, .slds-textarea, .uiInput--input .input, .uiInput--input.input,
+        .uiInput--select.select, .uiInput--select .select, .uiInput--select .uiPopupTrigger a,
+        .slds-checkbox .slds-checkbox_faux, .slds-checkbox .slds-checkbox--faux,
+        .uiInput--checkbox input, input.uiInput--checkbox {
+        border: 1px solid rgb(134, 131, 130);
+        }
+        
+        .slds-text-align--center div {
+        text-align: center;
+        }
+        
+        .slds-icon-utility-delete {
+        margin-left: -13px;
+        }
+        
+        .slds-lookup__menu {
+        width: 139%;
+        }
+        
+        .cStrike_lookup {
+        /* 		width: 133px; */
+        
+        }
+        
+        .selectWidth {
+        width: 147px !important;
+        }
+        
+        .slds-text-title_caps, .slds-text-title--caps {
+        text-transform: none;
+        line-height: 1.2;
+        }
+        
+        .closeIcon, .lableNone lable {
+        display: none;
+        }
+        
+        .ccWidth {
+        width: 63px !important;
+        }
+        
+        .slds-table th, .slds-table td {
+        padding: .0rem .5rem;
+        }
+        
+        .slds-form-element__label {
+        display: none;
+        }
+        
+        .blueHeader thead th {
+        background: #d0e4f5;
+        }
+        
+        .tableHeader thead th {
+        background: #757575;
+        color: white;
+        }
+        
+        .topBorder td {
+        border-top: 0.1rem black !important;
+        border-top-style: solid !important;
+        }
+        
+        .uiInput--select, .uiInput--input {
+        min-height: 32px !important;
+        }
+    </style>
+    <aura:if isTrue="{!v.readAcces}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <h2>Looks like there's something wrong.<br/>You do not have necessary access to perform the operation you requested.
+Please contact the owner of the record or system administrator.<br/>
+            </h2>
+        </div>
+        <div class="slds-float_right" style="margin-top:34%;">
+            <button class="slds-button slds-button_destructive" onclick="{!c.closePopUp}">Close</button>
+        </div>
+        <aura:set attribute="else">
+            <div class="demo-only" style="height: 640px;" id="demo-only">
+                <section role="dialog" tabindex="-1"
+                         aria-labelledby="modal-heading-01" aria-modal="true"
+                         aria-describedby="modal-content-id-1"
+                         class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                    title="Close" onclick="{!c.closeQuickAction}">
+                                <lightning:icon variant="inverse" iconName="utility:close" class="slds-icon slds-icon_small" size="small" alternativeText="icon" />
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </header>
+                        
+                        <c:BulkPortPair portPairList="{!v.portPairList}" recordId="{!v.recordId}" />
+                        <c:RotationPortPair rpWrapper="{!v.wrapperList}"  recordId="{!v.recordId}" />
+                        
+                        <footer class="slds-modal__footer slds-text-align_right">
+                        	<div class="slds-grid">
+                        		<div class="slds-col"> 
+	                        		<b>Grand Total Give -</b>&nbsp; <ui:outputNumber aura:id="curr" value="{!v.grandTotalGive}"  format="###,###,##0"/>
+				                	&nbsp;&nbsp;
+				                	<b>Grand Total Take -</b>&nbsp; <ui:outputNumber aura:id="curr" value="{!v.grandTotalTake}"  format="###,###,##0"/>
+				                &nbsp;&nbsp;&nbsp;&nbsp;
+                        		 <button class="slds-button slds-button_neutral" onclick="{!c.closeQuickAction}">&nbsp;Cancel&nbsp;</button>&nbsp;
+                        		 <button class="slds-button slds-button_brand" onclick="{!c.Save}">&nbsp;Save&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        	</div>
+                            
+                            
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

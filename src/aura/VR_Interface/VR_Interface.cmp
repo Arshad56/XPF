@@ -1,0 +1,75 @@
+<aura:component controller="VR_Interface_Controller" Implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+	 <aura:attribute name="recordId" type="String" />
+	 <aura:attribute name="vrdList" type="Boolean" default="true"/>
+	 <aura:attribute name="odList" type="Boolean" default="false"/>
+	 <aura:attribute name="miList" type="Boolean" default="false"/>
+	 <aura:attribute name="eiList" type="Boolean" default="false"/>
+	 <aura:attribute name="editView" type="Boolean" />
+	 <aura:attribute name="hideButtons" type="Boolean" />
+	 <aura:attribute name="contact" type="Contact" default="{ 'sobjectType': 'Contact' }"/>
+	 
+	 <aura:handler name="initExpList" event="c:InitExp" action="{!c.handleExpList}"  description="handle hide show buttons from EXP item" />
+	 
+	 <div style="max-height:550px;"> 
+	 <lightning:tabset variant="scoped">
+            <lightning:tab onactive="{! c.handleActive }" label="VRs" id="VRD" >
+            	<div class="slds-scrollable"  style="max-height:500px;">
+	            	<aura:if isTrue="{!and(v.vrdList , !v.editView)}">
+	            			<c:VisitReportDetailList recordId="{!v.recordId}"/>
+	            		<aura:set attribute="else">
+	            			<c:Visit_Report_Details recordId="{!v.recordId}" aura:id="Visit_Report_Details"/>
+		            	</aura:set>
+				     </aura:if> 
+			    </div>
+			     
+            </lightning:tab>
+            <lightning:tab onactive="{! c.handleActive }" label="Deals" id="OD" >
+            	<div class="slds-scrollable"  style="max-height:500px;">
+	            	<aura:if isTrue="{!and(v.odList , !v.editView)}">
+							<c:DealList recordId="{!v.recordId}"/>
+	            		<aura:set attribute="else">
+		 					<c:Deal_Details recordId="{!v.recordId}" aura:id="Deal_Details"/>
+		            	</aura:set>
+				     </aura:if>
+			    </div>
+            </lightning:tab>
+            <lightning:tab onactive="{! c.handleActive }" label="MIS" id="MI" >
+            	<div class="slds-scrollable"  style="max-height:500px;">
+		           	<aura:if isTrue="{!and(v.miList , !v.editView)}">
+							<c:MIList recordId="{!v.recordId}"/>
+		           		<aura:set attribute="else">
+							<c:MI_Details recordId="{!v.recordId}" aura:id="MI_Details"/>
+		            	</aura:set>
+				     </aura:if>
+				  </div>  
+            </lightning:tab>
+            <lightning:tab onactive="{! c.handleActive }" label="Exp" id="EI" >
+	            <div class="slds-scrollable"  style="max-height:500px;">
+	            	<aura:if isTrue="{!and(v.eiList , !v.editView)}">
+							<c:ExpList recordId="{!v.recordId}"/>
+	            		<aura:set attribute="else">
+							<c:Exp_Details recordId="{!v.recordId}" aura:id="Exp_Details"/>
+		            	</aura:set>
+				     </aura:if>
+				 </div>
+            </lightning:tab>
+        </lightning:tabset>
+        </div>
+        <footer class="slds-card__footer slds-text-align_right">
+        <aura:if isTrue="{! !v.hideButtons}">
+        	<aura:if isTrue="{!v.editView}">
+        		<div class="slds-no-flex" id="saveBtn">
+        			 <button class="slds-button slds-button_neutral" onclick="{!c.cancel}">Cancel</button>
+        			 <button class="slds-button slds-button_neutral" onclick="{!c.saveNew}">Save and New</button>
+		             <button class="slds-button slds-button_brand"  onclick="{!c.save}">Save</button>
+	           </div> 
+        		<aura:set attribute="else">
+       				<div class="slds-no-flex" id="addBtn">
+       					 <button class="slds-button slds-button_neutral" onclick="{!c.closeQuickAction}">Cancel</button>
+			             <button class="slds-button slds-button_brand" onclick="{!c.addNew}">Add New</button>
+		           </div>
+        		</aura:set>
+        	</aura:if>
+       	</aura:if>
+         </footer>
+</aura:component>

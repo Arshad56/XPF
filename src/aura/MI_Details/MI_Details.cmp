@@ -1,0 +1,94 @@
+<aura:component controller="VR_Interface_Controller" access="global">
+	<aura:attribute name="taskCheckbox" type="boolean" default="false" />
+	<aura:attribute name="miItem" type="Market_Intelligence__c" />
+	<aura:attribute name="taskInstance" type="Task" />
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="taskUserList" type="String" />
+	
+	<aura:attribute name="country" type="String" />
+	<aura:attribute name="city" type="String" />
+	
+	<aura:attribute name="options" type="String[]" />
+
+	<aura:attribute name="miShareList" type="VR_Interface_Controller.MIShareWrapper[]" />
+	<aura:attribute name="miWrapper" type="VR_Interface_Controller.MIWrapper" default="{}" />
+	
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:method name="getSaveMI" action="{!c.saveMI}" access="PUBLIC">
+        <aura:attribute name="from" type="String" />
+    </aura:method>
+    
+    
+	<div class="slds-grid slds-wrap">
+		<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+			<div class="slds-form-element">
+				<c:strike_VP_lookup value="{!v.miWrapper.miItem.Account_Name__c}" label="Account Name" object="Account"
+					searchField="Name" placeholder=""
+					subtitleField="Account.Account_Code__c" order="Name" limit="20"
+					loadingMessage="Loading..." errorMessage="Invalid input" />
+			</div>
+			<div class="slds-form-element">
+				<c:PicklistValues sObjectName="Market_Intelligence__c" label="Type" fieldName="Type__c" selectedValue="{!v.miWrapper.miType}" />
+			</div>
+		</div>
+		
+		<c:VR_DependentPicklist aura:id="VR_DependentPicklist" isMultiSelect="false" isRequired="false" objInfo="Visit_Report_Item__c" controlling="{!v.country}" dependent="{!v.city}"/>
+		
+		<div
+			class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_xx-small">
+			<div class="slds-form-element">
+				<lightning:textarea required="true" name="remarks"  value="{!v.miWrapper.miItem.Remarks__c}" label="Remarks" maxlength="300" />
+			</div>
+		</div>
+		<h3 class="slds-section-title--divider" style="width: 100%;background:  gray;color:  white;border-radius: 10px;">Task</h3>
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_xx-small">
+				<div class="slds-form-element">
+					<div class="slds-form-element__control">
+						<span class="slds-checkbox"> 
+							<input type="checkbox" name="options" id="checkbox-5" value="on" /> 
+							<label class="slds-checkbox_toggle slds-grid"> 
+							<span class="slds-form-element__label slds-m-bottom_none"></span> 
+							<ui:inputCheckbox value="{!v.taskCheckbox}" change="{!c.toggleFollowUpDate}" /> 
+							<span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+							<span class="slds-checkbox_faux"></span> 
+							<span class="slds-checkbox_on">Assign Task</span> 
+							<span class="slds-checkbox_off">Assign Task</span>
+							</span>
+						</label>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div aura:id="followSect" class="slds-grid slds-wrap slds-hide">
+				<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+					<div class="slds-form-element">
+							<lightning:input required="true" name="subject" value="{!v.miWrapper.taskInstance.Subject}" label="Subject" />
+					</div>
+				</div>
+				<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+					<div class="slds-form-element">
+							<c:strike_VP_lookup required="true" value="{!v.miWrapper.taskUserList}"
+									label="Assign To" object="User" searchField="Name" placeholder=""
+									subtitleField="Email" order="Name" limit="15"
+									loadingMessage="Loading..." errorMessage="Invalid input" />
+					</div>
+				</div>
+				<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+					<div class="slds-form-element">
+							<lightning:input required="true" type="date" value="{!v.miWrapper.taskInstance.ActivityDate}" label="Follow-up" name="follow_up"/>
+					</div>
+				</div>
+				<div
+					class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+					<div class="slds-form-element">
+						<lightning:input name="remarks" value="{!v.miWrapper.taskInstance.Remarks__c}" label="Remarks" />
+					</div>
+				</div>
+			</div>
+			<h3 class="slds-section-title--divider"  style="width: 100%;background:  gray;color:  white;border-radius: 10px;">Record Sharing</h3>
+			
+			<c:MI_Sharing_Section miShareList="{!v.miShareList}"/>
+			<div style="height: 100px;"></div>
+		
+		</div>
+</aura:component>

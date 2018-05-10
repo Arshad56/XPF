@@ -1,0 +1,44 @@
+<aura:component >
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="AccessLevel" type="String"/>
+    <aura:attribute name="rowIndex" type="String"/>
+    <aura:attribute name="isOwner" type="Boolean"/>
+	<aura:attribute name="shareItem" type="ShareNotify_Controller.ShareNotifyWrapper" />
+    <aura:registerEvent name="DeleteUpdateRowEvt" type="c:DeleteRowEvt"/> 
+	 
+	 
+    <td  style="width: 40%">
+    	<div><h3 class="slds-tile__title slds-truncate" title="{!v.shareItem.name}"><b>{!v.shareItem.name}</b></h3></div>
+    	<div class="slds-item_label slds-truncate">{!v.shareItem.grp}</div>
+    </td>
+    <td  style="width: 5%;text-align: right;">
+    <aura:if isTrue="{! v.isOwner}">
+    	<ui:inputCheckbox value="{!v.shareItem.notify}"/>
+   	</aura:if>
+    </td>
+    <td  style="width: 5%;text-align: left;">
+    <aura:if isTrue="{! v.isOwner}">
+    	<lightning:helptext content="Check this box to notify selected Group/User" />
+    </aura:if> 
+    </td>
+    <td style="width: 30%;">
+    <aura:if isTrue="{! and(v.isOwner , v.shareItem.manual) }">
+    	 <ui:inputSelect aura:id="levels" value="{!v.AccessLevel}" class="selectWidth" change="{!c.assignPicklist}">
+             <ui:inputSelectOption text="Read" label="Read"/>
+             <ui:inputSelectOption text="Edit" label="Read/Write"/>
+	    </ui:inputSelect> 
+	    <aura:set attribute="else">
+	    	&nbsp;&nbsp;&nbsp;&nbsp;{!v.shareItem.accessLevel} 
+	    </aura:set>
+	</aura:if>
+	   </td>
+	   <td  style="width: 20%;text-align: center;">
+	   	<aura:if isTrue="{! and(v.isOwner , v.shareItem.manual)}">
+	  		 <a onclick="{!c.removeRow}">
+                  <lightning:icon variant="error" iconName="utility:close" class="slds-icon slds-icon_small" size="small" alternativeText="icon" />
+                  <span class="slds-assistive-text">Delete Icon</span>
+               </a>    
+         </aura:if>
+	   </td>
+    	
+</aura:component>

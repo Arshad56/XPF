@@ -1,0 +1,116 @@
+<aura:component controller="VR_Interface_Controller" access="global">
+	
+	<aura:attribute name="taskCheckbox" type="boolean" default="false"/>
+	<aura:attribute name="vrItem" type="Visit_Report_Item__c" />
+	<aura:attribute name="taskInstance" type="Task" />
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="stateList" type="List" />
+	<aura:attribute name="country" type="String" />
+	<aura:attribute name="city" type="String" />
+	<aura:attribute name="accountId" type="String" />
+	<aura:attribute name="vriConList" type="String" />
+	<aura:attribute name="taskUserList" type="String" />
+ 	
+ 	<aura:attribute name="vriShareList" type="VR_Interface_Controller.ShareWrapper[]" />
+	<aura:attribute name="vriWrapper" type="VR_Interface_Controller.vriWrapper" default="[]"  />
+	
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	
+	<aura:method name="getSaveVRI" action="{!c.saveVRI}" access="PUBLIC">
+        <aura:attribute name="from" type="String" />
+    </aura:method>
+	<div class="slds-grid slds-wrap">
+		  <div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+			<div class="slds-form-element">
+				<c:strike_VP_lookup value="{!v.vriWrapper.vrItem.Account_Name__c}"
+					label="Account Name" object="Account" searchField="Name"
+					placeholder="" subtitleField="Account.Account_Code__c" order="Name"
+					limit="20" loadingMessage="Loading..." required="true" errorMessage="Invalid input" />
+			</div>
+			<div class="slds-form-element">
+				<c:strike_VP_multilookup value="{!v.vriWrapper.vriConList}"
+					label="Contact" object="Contact" searchField="Name" placeholder=""
+					subtitleField="Account.Name" order="Name" limit="20"
+					loadingMessage="Loading..."  required="true" errorMessage="Invalid input" />
+			</div>
+		</div>
+		<c:VR_DependentPicklist aura:id="VR_DependentPicklist" objInfo="Visit_Report_Item__c" controlling="{!v.country}" dependent="{!v.city}"/>
+		
+		<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_xx-small">
+			<div class="slds-form-element">
+				 <c:strike_multiLookup value="{!v.vriWrapper.vrItem.Discussed_Service__c}"
+				 		label=" Service(s) Discussed"
+					    object="Service__c"
+					    searchField="Name"  
+					    placeholder=""
+					    subtitleField="Service_Name__c"
+					    order="Name"
+					    limit="20"
+					    loadingMessage="Loading..."
+					    errorMessage="Invalid input"
+					    />  
+			</div>
+		</div>
+		
+		<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+			<div class="slds-form-element">
+				<lightning:textarea name="agenda"  required="true" value="{!v.vriWrapper.vrItem.Agenda__c}" class="txtAreaHt" label="Agenda" maxlength="32768" />
+			</div>
+		</div>
+		
+		<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+			<div class="slds-form-element">
+				<lightning:textarea name="feedback"  required="true" value="{!v.vriWrapper.vrItem.Feedback__c}" class="txtAreaHt" label="Feedback" maxlength="32768" />
+			</div>
+		</div>
+		<h3 class="slds-section-title--divider" style="width: 100%;background:  gray;color:  white;border-radius: 10px;">Task</h3>
+		<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_xx-small">
+			<div class="slds-form-element">
+				<div class="slds-form-element__control">
+					<span class="slds-checkbox"> 
+						<input type="checkbox" name="options" id="checkbox-5" value="on" /> 
+						<label class="slds-checkbox_toggle slds-grid"> 
+						<span class="slds-form-element__label slds-m-bottom_none"></span> 
+						<ui:inputCheckbox value="{!v.taskCheckbox}" change="{!c.toggleFollowUpDate}" /> 
+						<span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+						<span class="slds-checkbox_faux"></span> 
+						<span class="slds-checkbox_on">Assign Task</span> 
+						<span class="slds-checkbox_off">Assign Task</span>
+						</span>
+					</label>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div aura:id="followSect" class="slds-grid slds-wrap slds-hide">
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element">
+						<lightning:input name="subject"  required="true"  value="{!v.vriWrapper.taskInstance.Subject}" label="Subject" />
+				</div>
+			</div>
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element">
+						<c:strike_VP_lookup value="{!v.vriWrapper.taskUserList}"
+								label="Assign To" object="User" searchField="Name" placeholder=""
+								subtitleField="Email" order="Name" limit="15"
+								loadingMessage="Loading..."  required="true" errorMessage="Invalid input" />
+				</div>
+			</div>
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element">
+						<lightning:input type="date"  required="true" value="{!v.vriWrapper.taskInstance.ActivityDate}" label="Follow-up" name="follow_up"/>
+				</div>
+			</div>
+			<div
+				class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element">
+					<lightning:input name="remarks" value="{!v.vriWrapper.taskInstance.Remarks__c}" label="Remarks" />
+				</div>
+			</div>
+		</div>
+		<h3 class="slds-section-title--divider"  style="width: 100%;background:  gray;color:  white;border-radius: 10px;">Record Sharing</h3>
+		<c:Sharing_Section vrShareList="{!v.vriShareList}"/>
+		<div style="height: 100px;"></div>
+	</div>
+	
+</aura:component>

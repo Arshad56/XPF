@@ -1,0 +1,29 @@
+<aura:component >
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="AccessLevel" type="String"/>
+    <aura:attribute name="rowIndex" type="String"/>
+	<aura:attribute name="vrShare" type="VR_Interface_Controller.ShareWrapper" />
+    <aura:registerEvent name="DeleteRowEvt" type="c:DeleteRowEvt"/> 
+	 
+	 
+    <td  style="width: 45%">
+    	<div><h3 class="slds-tile__title slds-truncate" title="{!v.vrShare.name}"><b>{!v.vrShare.name}</b></h3></div>
+    	<div class="slds-item_label slds-truncate">{!v.vrShare.grp}</div>
+    </td>
+    <td  style="width: 5%;text-align: right;">
+    	<ui:inputCheckbox value="{!v.vrShare.notify}"/>
+    </td>
+    <td style="width: 25%">
+    	 <ui:inputSelect aura:id="levels" value="{!v.AccessLevel}" class="selectWidth" change="{!c.assignPicklist}">
+             <ui:inputSelectOption text="Read" label="Read"/>
+             <ui:inputSelectOption text="Edit" label="Read/Write"/>
+	    </ui:inputSelect>
+	   </td>
+	   <td  style="width: 20%;text-align: center;">
+	  		 <a onclick="{!c.removeRow}">
+                  <lightning:icon variant="error" iconName="utility:close" class="slds-icon slds-icon_small" size="small" alternativeText="icon" />
+                  <span class="slds-assistive-text">Delete Icon</span>
+               </a>    
+	   </td>
+    	
+</aura:component>

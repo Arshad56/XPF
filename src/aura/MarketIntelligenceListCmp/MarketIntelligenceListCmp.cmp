@@ -1,0 +1,89 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <lightning:card title="MIS - This Week" >
+        <ui:scrollerWrapper class="scrollerSize">
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Alpine • Customer • ALGERIA  
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject: This is a test subject to test the truncation of text field in the components.
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • APL Europe RHQ • Customer • SINGAPORE 
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • APL Asia RHQ • Competitor • BULGARIA  
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Alpine • Customer • ALGERIA  
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Evergreen Global HQ • Competitor • ALGERIA 
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Evergreen Global HQ • Competitor • ALGERIA 
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject: This is a test subject to test the truncation of text field in the components.
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Evergreen Global HQ • Competitor • ALGERIA 
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Evergreen Global HQ • Competitor • ALGERIA 
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Evergreen Global HQ • Competitor • ALGERIA 
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+            <p class="slds-p-horizontal_small">
+                <p class="slds-truncate" title="Company">
+                    <a href="#">MIS-0152</a> • Evergreen Global HQ • Competitor • ALGERIA 
+                </p>
+                <p class="slds-truncate" title="Company">
+                    Subject
+                </p>
+            </p>
+        </ui:scrollerWrapper>
+        <aura:set attribute="footer">
+        	&nbsp;
+        </aura:set>
+    </lightning:card>
+</aura:component>

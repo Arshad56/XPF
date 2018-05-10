@@ -1,0 +1,138 @@
+<aura:component controller="VR_Interface_Controller" access="global">
+	<aura:attribute name="taskCheckbox" type="boolean" default="false" />
+	<aura:attribute name="expItem" type="Expense_Item__c" /> 
+	<aura:attribute name="taskInstance" type="Task" />
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="from" type="String" />
+	<aura:attribute name="taskUserList" type="String" />
+    <aura:attribute name="showFile" type="boolean" default="true" />
+	<aura:attribute name="options" type="String[]" />
+    <aura:attribute name="currencyString" type="String"/>
+    
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="expShareList" type="VR_Interface_Controller.ExpShareWrapper[]" />
+	<aura:attribute name="expWrapper" type="VR_Interface_Controller.ExpWrapper" default="{}" />
+	
+	<aura:attribute name="fileUpload" type="boolean" default="false" />
+	<aura:attribute name="ExpId" type="String" />
+	<aura:attribute name="showFileMsg" type="boolean" default="false" />
+	
+	<aura:registerEvent name="initExpList" type="c:InitExp"/>
+	<aura:registerEvent name="handleExpEvent" type="c:InitExp"/>
+	
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:handler name="handleExpEvent" event="c:InitExp" action="{!c.handleExpEvent}"/>
+	
+	<aura:method name="getSaveExp" action="{!c.saveExp}" access="PUBLIC">
+        <aura:attribute name="from" type="String" />
+    </aura:method>
+    
+	<div class="slds-grid slds-wrap">
+		<aura:if isTrue="{!v.fileUpload}">
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_xx-small">
+				<aura:if isTrue="{!v.showFileMsg}">
+					<div class="slds-box slds-theme--success slds-align--absolute-center">
+					  <p><strong>Please upload files here!</strong> </p>
+					</div>
+				</aura:if>
+				<br/><br/>
+				<div class="slds-form-element slds-align--absolute-center"><!--   value="{!v.expWrapper.expItem.Date__c}"  -->
+						<lightning:fileUpload label="Add attachment" multiple="true" accept=".pdf, .png, .docx, .xlsx, .jpg, .jpeg"  recordId="{!v.ExpId}"  onuploadfinished="{!c.handleUploadFinished}"/>
+				</div><br/><br/>
+				<div class="slds-form-element slds-align--absolute-center">
+						<button class="slds-button slds-button_neutral" onclick="{!c.done}">Done</button>
+				</div>
+			</div>
+		<aura:set attribute="else">
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+                <div class="slds-form-element">
+                    <c:strike_VP_lookup value="{!v.expWrapper.expItem.Account_Name__c}" label="Account Name" object="Account"
+                                        searchField="Name" placeholder=""
+                                        subtitleField="Account.Account_Code__c" order="Name" limit="20"
+                                        loadingMessage="Loading..." errorMessage="Invalid input" />
+                </div>
+            </div>
+            <div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element"><!--   value="{!v.expWrapper.expItem.Date__c}"  -->
+						<lightning:input required="true" type="date" value="{!v.expWrapper.expItem.Date__c}" label="Date" name="Date_c"/>
+				</div>
+            </div>
+            
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element">
+<!-- 					<ui:inputSelect aura:id="levels" label="Currency Code" required="true" value="{!v.currencyString}" class="selectWidth" change="{!c.assignCurrency}"> -->
+<!-- 				             <ui:inputSelectOption text="USD" label="USD"/> -->
+<!-- 				             <ui:inputSelectOption text="EURO" label="EURO"/> -->
+<!-- 				    </ui:inputSelect> -->
+				    <c:PicklistValues sObjectName="Expense_Item__c" label="Currency Code" fieldName="Currency_Code__c" selectedValue="{!v.currencyString}" />
+				</div>
+			</div>
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element">
+						<ui:inputNumber required="true" class="slds-input" value="{!v.expWrapper.expItem.Amount__c}" label="Amount" />
+				</div>
+			</div>
+			 
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+				<div class="slds-form-element">
+					<c:PicklistValues sObjectName="Expense_Item__c" label="Type" fieldName="Type__c" selectedValue="{!v.expWrapper.expType}" />
+				</div>
+			</div>
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_xx-small">
+				<div class="slds-form-element"> 
+					<lightning:textarea name="Remarks"  value="{!v.expWrapper.expItem.Remarks__c}" label="Remarks" maxlength="300" />
+				</div>
+			</div>
+			
+			<h3 class="slds-section-title--divider" style="width: 100%;background:  gray;color:  white;border-radius: 10px;">Task</h3>
+				<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1 slds-p-around_xx-small">
+					<div class="slds-form-element">
+						<div class="slds-form-element__control">
+							<span class="slds-checkbox"> 
+								<input type="checkbox" name="options" id="checkbox-5" value="on" /> 
+								<label class="slds-checkbox_toggle slds-grid"> 
+								<span class="slds-form-element__label slds-m-bottom_none"></span> 
+								<ui:inputCheckbox value="{!v.taskCheckbox}" change="{!c.toggleFollowUpDate}" /> 
+								<span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+								<span class="slds-checkbox_faux"></span> 
+								<span class="slds-checkbox_on">Assign Task</span> 
+								<span class="slds-checkbox_off">Assign Task</span>
+								</span>
+							</label>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div aura:id="followSect" class="slds-grid slds-wrap slds-hide">
+					<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+						<div class="slds-form-element">
+								<lightning:input required="true" name="subject" value="{!v.expWrapper.taskInstance.Subject}" label="Subject" />
+						</div>
+					</div>
+					<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+						<div class="slds-form-element">
+								<c:strike_VP_lookup required="true" value="{!v.expWrapper.taskUserList}"
+										label="Assign To" object="User" searchField="Name" placeholder=""
+										subtitleField="Email" order="Name" limit="15"
+										loadingMessage="Loading..." errorMessage="Invalid input" />
+						</div>
+					</div>
+					<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+						<div class="slds-form-element">
+								<lightning:input required="true" type="date" value="{!v.expWrapper.taskInstance.ActivityDate}" label="Follow-up" name="follow_up"/>
+						</div>
+					</div>
+					<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+						<div class="slds-form-element">
+							<lightning:input name="remarks" value="{!v.expWrapper.taskInstance.Remarks__c}" label="Remarks" />
+						</div>
+					</div>
+				</div>
+				<h3 class="slds-section-title--divider"  style="width: 100%;background:  gray;color:  white;border-radius: 10px;">Record Sharing</h3>
+				
+				<c:Exp_Sharing_Section expShareList="{!v.expShareList}"/>
+				<div style="height: 100px;"></div>
+			</aura:set>
+			</aura:if>
+		</div>
+</aura:component>

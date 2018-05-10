@@ -1,0 +1,44 @@
+<aura:component controller="ManageServicesController" Implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="visitReport" type="Visit_Report__c"/>
+    <aura:attribute name="readAccess" type="Boolean"/>
+    <aura:attribute name="servicesId" type="string"/>
+   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div class="slds-page-header slds-align_absolute-center">
+        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Add Contacts">Manage Service(s) Discussed</h1>
+        <p class="slds-text-body_small slds-line-height_reset"></p>
+    </div><br/>
+    <aura:if isTrue="{!v.readAccess}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <h2>Looks like there's something wrong.<br/>You do not have necessary access to perform the operation you requested.
+Please contact the owner of the record or system administrator.
+            </h2>
+        </div>
+        <aura:set attribute="else">
+            <div class="slds-grid slds-grid_vertical" style="overflow-y: scroll !important;overflow-x: hidden;height:200px;">
+                <div class="slds-col">
+                   <c:strike_multiLookup value="{!v.servicesId}"
+                   		label=" Service(s) Discussed"
+					    object="Service__c"
+					    searchField="Name"  
+					    placeholder=""
+					    subtitleField="Service_Name__c"
+					    order="Name"
+					    limit="5"
+					    loadingMessage="Loading..."
+					    errorMessage="Invalid input"
+					    />  
+                </div>
+                
+            </div>
+            <br/><br/>
+            <div class="slds-align_absolute-center">  
+                <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelHandle }" />     
+                <lightning:button variant="brand" label="save" onclick="{!c.saveRecord }" /> 
+            </div>
+        </aura:set>
+    </aura:if>
+    
+</aura:component>

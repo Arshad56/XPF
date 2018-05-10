@@ -1,0 +1,16 @@
+<apex:page standardController="Visit_Report_Item__c" extensions="RedirectToVP_Controller">
+
+<div style="color:green;font-size:2rem;font-family: sans-serif;Text-align:center">
+ <p> 
+  
+     To create Visit Report please navigate to Visit Plan tab.
+ </p>
+ <span style="font-size:medium;text-align:center;"> You will be redirected to Visit Plan tab momentarily</span>
+ <a style="display:none;" id="queuepage" href="{! '/'+keyPrefix}"> click on the link</a>
+ </div>
+ 
+ <script>
+setTimeout(function(){ document.getElementById('queuepage').click(); }, 5000);
+
+</script>
+</apex:page>

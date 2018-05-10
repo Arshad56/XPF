@@ -1,0 +1,101 @@
+<aura:component controller="BulkPortPair_Controller" >
+ 	<aura:attribute name="rpWrapper" type="BulkPortPair_Controller.RPWrapper[]" default="[]"/>  
+ 	<aura:attribute name="rpWrapperInstance" type="BulkPortPair_Controller.RPWrapper" default="{}"/>  
+ 	<aura:attribute name="rdListInstance" type="Service_Rotation_Detail__c[]" default="[{'sobjectType': 'Service_Rotation_Detail__c'},{'sobjectType': 'Service_Rotation_Detail__c'}]"/> 
+ 	<aura:attribute name="rpObject" type="Service_Rotation__c" default="{'sobjectType': 'Service_Rotation__c','Currency_Code__c':'USD'}"/> 
+ 	
+    <aura:attribute name="RPlist" type="Service_Rotation__c[]"/> 
+    <aura:attribute name="recordId" type="String" />
+    
+    <aura:attribute name="totalGive" type="Decimal" />
+	<aura:attribute name="totalTake" type="Decimal" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="initiateSR" event="c:appEvent" action="{!c.initiateData}"/>
+    <aura:handler name="DeleteRPRowEvt" event="c:DeleteRPRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddRDRowEvt" event="c:AddRDRowEvt" action="{!c.AddRDRowEvt}"/>
+ 	<aura:handler name="sumRowSR" event="c:AddNewRowEvt" action="{!c.sumrizeRow}"/>
+ <!--Header Part-->       
+	<div style="background: white;"> 
+		<table>
+			<tr>
+				<td style="width: 40%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+				<td>
+			       	<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" style="margin-top: 8px;font-weight: 600;">Service Rotation</h2>
+				</td>
+			</tr>
+		</table>
+
+ <!--Table Part-->           
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table--fixed-layout tableHeader"> 
+            <thead>
+                <tr class="slds-text-title_caps">
+                	<th scope="col" class="slds-text-align--center"  style="width: 20px;">
+                        XPF
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 150px;">
+                        SERVICE
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 100px;">
+                        VOLUME <br/>(TEUs)
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 100px;">
+                        WT/TEU 
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 100px;">
+                        CUR 
+                    </th>
+                    
+                    <th scope="col" class="slds-text-align--center" style="width: 110px;">
+                         RATE 
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 90px;">
+                        TOTAL VALUE
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 150px;">
+                        REMARKS
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 30px;">
+                        &nbsp;
+                    </th>
+            </tr>
+        </thead>  
+    </table>
+    <div class="slds-modal__content" style="height: 305px">
+	    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table--fixed-layout " style="margin-bottom: -18px;"> 
+	           <tbody>   
+               <tr class="slds-text-title_caps"  style="display: none;">
+                   <td scope="col" class="slds-text-align--center"  style="width: 55px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 150px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 100px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 100px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 100px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 110px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 90px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 150px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 30px;height: 1px;">&nbsp;</td>
+	            </tr>
+	            <aura:iteration items="{!v.rpWrapper}" var="item" indexVar="index">
+	                <c:RPRowitem RPInstance="{!item}" rowIndex="{!index}" />
+	            </aura:iteration>
+	            <tr style="background: rgb(243, 242, 242);" >
+                	<td colspan="5" style="z-index: -1;">
+                	</td>
+                	<td colspan="2" style="z-index: 0;">
+                		<div style="text-align: right;"> 
+		                	<b>Total Give -</b>&nbsp; <ui:outputCurrency aura:id="curr" currencySymbol="" value="{!v.totalGive}"  format="###,###,##0"/>&nbsp;&nbsp;
+		                	<b>Total Take -</b>&nbsp; <ui:outputCurrency aura:id="curr" currencySymbol="" value="{!v.totalTake}"  format="###,###,##0"/>
+	                	</div>
+                	</td>
+                	<td class="slds-text-align--center" colspan="2" style="z-index: 0;">
+                		<button class="slds-button slds-button_neutral" onclick="{!c.AddNewRowButton}" style="width:100%;">
+									+ Add 1 more row
+				        </button>
+                	</td>
+                </tr>
+	        </tbody>
+	    </table>
+	</div>
+</div>
+</aura:component>

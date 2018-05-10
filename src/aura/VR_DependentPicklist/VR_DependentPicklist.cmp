@@ -1,0 +1,103 @@
+<aura:component controller="VR_Interface_Controller">
+    <!--init function which is call on component load -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+   <aura:attribute name="recordId" type="String"/>
+    <!--Using Attributes-->
+    <aura:attribute name="objInfo" type="string" default="contact" description="store object Info." />
+    <aura:attribute name="depnedentFieldMap" type="map" description="store controller(key)--> dependent(values) picklist value as a map." />
+    <aura:attribute name="isDependentDisable" type="boolean" default="true" description="use for, make disbale depandent field." />
+ 	 
+ 	<aura:attribute name="controlling" type="String" description="Key Country" default="" />
+ 	<aura:attribute name="controllingList" type="String[]" description="fetch All countries from Custom Setting" />
+ 	<aura:attribute name="dependent" type="String" description="Key City" />
+ 	<aura:attribute name="dependentList" type="String[]" description="fetch All related cities from Custom Setting" />
+    
+    <aura:attribute name="isAction" type="Boolean" default="false"/>
+    <aura:attribute name="isRequired" type="Boolean" default="true"/>
+    <aura:attribute name="isMultiSelect" type="Boolean" default="true"/>
+    
+    <aura:attribute name="selectedOptionPillsCntr" type="Object[]" access="public" description="pills to be populated when an option is selected from the dropdown"/>
+ 	<aura:attribute name="selectedOptionPillsDep" type="Object[]" access="public" description="pills to be populated when an option is selected from the dropdown"/>
+ 	
+ 	<aura:method name="initiate" action="{!c.onControllerFieldChange}" access="PUBLIC"/>
+ 	 
+	<aura:registerEvent name="onKeyCountryChange" type="c:On_Key_Country_Change"/>
+ 	<aura:handler name="onKeyCountryChange" event="c:On_Key_Country_Change" action="{!c.handleSelectChangeEvent}"/>
+ 	<aura:handler name="onKeyCountryRemove" event="c:On_Key_Country_Change" action="{!c.handleRemoveControllingEvent}"/>
+ 	
+ 	<aura:if isTrue="{!v.isAction}">
+ 		<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+		    <div class="slds-form-element">
+		         <!--Controller Field-->
+		         	<aura:if isTrue="{!v.isMultiSelect}">
+		         			<c:strike_VR_multiSelectPicklist label="Key Country Discussed" value="{!v.controlling}"  required="{!isRequired}"   
+								errorMessage="Invalid input" controlling="true" selectedOptionPills="{!v.selectedOptionPillsCntr}">
+								    <aura:iteration items="{!v.controllingList}" var="item" indexVar="index">
+								    	<c:strike_VR_option label="{!item}" value="{!item}"/>
+								    </aura:iteration>
+								</c:strike_VR_multiSelectPicklist>
+		         		<aura:set attribute="else">
+		            			<ui:inputSelect aura:id="levels" label="Key Country Discussed" value="{!v.controlling}" required="{!isRequired}" change="{!c.handleSelectChangeEvent}" >
+		            				<ui:inputSelectOption text="" label="-- None ---"/>
+		            				<aura:iteration items="{!v.controllingList}" var="item">
+							             <ui:inputSelectOption text="{!item}" label="{!item}"/>
+							         </aura:iteration>
+						    	</ui:inputSelect>
+		            	</aura:set>
+			     	</aura:if> 
+						
+		        </div>
+ 			</div>
+	 		<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+	 			<div class="slds-form-element">
+		            <c:strike_VR_multiSelectPicklist label="Key City/Port Discussed"
+		    			value="{!v.dependent}"  required="{!isRequired}"
+					    errorMessage="Invalid input"
+					    selectedOptionPills="{!v.selectedOptionPillsDep}">
+					    <aura:iteration items="{!v.dependentList}" var="item" indexVar="index">
+					    	<c:strike_VR_option label="{!item}" value="{!item}"/>
+					    </aura:iteration>
+					</c:strike_VR_multiSelectPicklist>
+		        </div>
+    		</div>
+	 	<aura:set attribute="else">
+	 	
+			<div class="slds-size_1-of-1 slds-small-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2 slds-p-around_xx-small">
+	    <div class="slds-form-element">
+	         <!--Controller Field-->
+	         	<aura:if isTrue="{!v.isMultiSelect}">
+	         			<c:strike_VR_multiSelectPicklist label="Key Country Discussed" value="{!v.controlling}"  required="{!isRequired}"   
+							errorMessage="Invalid input" controlling="true" selectedOptionPills="{!v.selectedOptionPillsCntr}">
+							    <aura:iteration items="{!v.controllingList}" var="item" indexVar="index">
+							    	<c:strike_VR_option label="{!item}" value="{!item}"/>
+							    </aura:iteration>
+							</c:strike_VR_multiSelectPicklist>
+	         		<aura:set attribute="else">
+	            			<ui:inputSelect aura:id="levels" label="Key Country Discussed" value="{!v.controlling}" required="{!isRequired}" change="{!c.handleSelectChangeEvent}" >
+	            				<ui:inputSelectOption text="" label="-- None ---"/>
+	            				<aura:iteration items="{!v.controllingList}" var="item">
+						             <ui:inputSelectOption text="{!item}" label="{!item}"/>
+						         </aura:iteration>
+					    	</ui:inputSelect>
+	            	</aura:set>
+		     	</aura:if> 
+					
+	        </div>
+	 
+	        <!--Dependent Field-->
+	        <div class="slds-form-element">
+	            <c:strike_VR_multiSelectPicklist label="Key City/Port Discussed"
+	    			value="{!v.dependent}"  required="{!isRequired}"
+				    errorMessage="Invalid input"
+				    selectedOptionPills="{!v.selectedOptionPillsDep}">
+				    <aura:iteration items="{!v.dependentList}" var="item" indexVar="index">
+				    	<c:strike_VR_option label="{!item}" value="{!item}"/>
+				    </aura:iteration>
+				</c:strike_VR_multiSelectPicklist>
+	        </div>
+    </div>
+	 	</aura:set>
+   	</aura:if> 
+	
+</aura:component>

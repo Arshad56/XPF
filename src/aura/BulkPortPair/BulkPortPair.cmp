@@ -1,0 +1,118 @@
+<aura:component controller="BulkPortPair_Controller" Implements="force:hasRecordId">
+	<aura:attribute name="recordId" type="String" />
+    <aura:attribute name="portPairList" type="Port_Pair__c[]" default="[{ 'sobjectType': 'Port_Pair__c','RV__c':'false'},{ 'sobjectType': 'Port_Pair__c','RV__c':'false' }]"/>
+	
+	<aura:attribute name="totalGive" type="Decimal" default="0"/>
+	<aura:attribute name="totalTake" type="Decimal" default="0" />
+  <!--Init handler which is call doInit js function on component Load-->  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+<!-- 	<aura:handler name="RvCheckedEvt" event="c:RvCheckedEvt" action="{!c.refreshList}"/> -->
+  
+  	<aura:registerEvent name="initiateSR" type="c:appEvent"/> 
+ <!--Event handler for Add and Delete Row Event which is fire from Child Component-->    
+    <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}"/>
+ 	<aura:handler name="sumRowPP" event="c:AddNewRowEvt" action="{!c.sumrizeRow}"/>
+ <!--Header Part-->        
+		<div style="background: white;"> 
+		<table>
+			<tr> 
+				<td style="width: 40%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+				<td>
+		       	<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" style="margin-top: 8px;font-weight: 600;">Port Pairs</h2>
+				</td>
+			</tr>
+		</table>
+<!--         <br/> -->
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table--fixed-layout tableHeader"> 
+            <thead>
+                <tr class="slds-text-title_caps">
+                  
+                    <th scope="col" class="slds-p-around_none slds-text-align--center"  style="width: 80px;padding: 0px;">
+                        <div class="slds-p-around_none">XPF</div>
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 120px;">
+                       SERVICE
+                    </th>
+                    <th scope="col" class="slds-text-align--center" style="width: 30px;">
+                        RV
+                    </th>
+                    
+                    <th scope="col" class="slds-text-align--center" style="width: 120px;">
+                        POL 
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 120px;">
+                        TOL
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 120px;">
+                        POD
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 120px;">
+                        TOD
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 80px;">
+                        VOLUME <br/>(TEUs)
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 70px;">
+                        WT/TEU
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 70px;">
+                        CUR
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 59px;">
+                        RATE
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 102px;">
+                        TOTAL VALUE
+                    </th>
+                    <th scope="col" class="slds-text-align--center"  style="width: 150px;">
+                        REMARKS
+                    </th>
+                    <th style="width: 30px;">
+                    </th>
+                </tr>
+            </thead>  
+      </table>
+      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1"  style="height: 182px">
+        <!--Table Part-->           
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table--fixed-layout" style="margin-top: -31px;margin-left: -15px;"> 
+            <tbody>
+                <tr class="slds-text-title_caps">
+                   <td scope="col" class="slds-p-around_none slds-text-align--center"  style="width: 80px;height: 1px;padding: 0px;"> &nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 142px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center" style="width: 30px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 130px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 130px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 130px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 130px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 80px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 70px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 70px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 80px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 80px;height: 1px;">&nbsp;</td>
+                   <td scope="col" class="slds-text-align--center"  style="width: 150px;height: 1px;">&nbsp;</td>
+                   <td style="width: 30px;height: 1px;"></td>
+                </tr>
+                <aura:iteration items="{!v.portPairList}" var="item" indexVar="index">
+                    <c:PortPairRow portPair="{!item}" rowIndex="{!index}" />
+                </aura:iteration> 
+                <tr style="background: rgb(243, 242, 242);" >
+                	<td colspan="12"  style="z-index: 0;">
+	                	<div style="text-align: right;">
+		                	<b>Total Give -</b>&nbsp; <ui:outputNumber aura:id="curr" value="{!v.totalGive}"  format="###,###,##0"/>
+		                	&nbsp;&nbsp;
+		                	<b>Total Take -</b>&nbsp; <ui:outputNumber aura:id="curr" value="{!v.totalTake}"  format="###,###,##0"/>
+	                	</div>
+                	</td>
+                	<td class="slds-text-align--center" colspan="2" style="z-index: 0;">
+                		<button class="slds-button slds-button_neutral" 
+                		onclick="{!c.AddNewRowButton}" style="width: 100%;">+ Add 1 more row</button>
+                	</td>
+                </tr>
+            </tbody>
+        </table> 
+      </div>
+<!--       	<c:RotationPortPair /> -->
+      </div>
+</aura:component>
